@@ -6,10 +6,10 @@ import { useThemeColors } from "../../hooks/useThemeColors";
 const font = "'DM Sans', sans-serif";
 
 const kpis = [
-  { label: "Total Assets", value: "221", change: "+12%", positive: true, icon: "assets" },
-  { label: "Critical Findings", value: "18", change: "-5%", positive: true, icon: "critical" },
-  { label: "Open Risks", value: "47", change: "+8%", positive: false, icon: "risks" },
-  { label: "Monitored Entities", value: "12", change: "+3%", positive: true, icon: "entities" },
+  { label: "Total Assets", value: "221", change: "+12%", positive: true, icon: "assets", accentColor: "#1B7EFF", iconBg: "rgba(27,126,255,0.07)", iconBorder: "rgba(27,126,255,0.13)" },
+  { label: "Critical Findings", value: "18", change: "-5%", positive: true, icon: "critical", accentColor: "#D62828", iconBg: "rgba(214,40,40,0.07)", iconBorder: "rgba(214,40,40,0.13)" },
+  { label: "Open Risks", value: "47", change: "+8%", positive: false, icon: "risks", accentColor: "#F77F00", iconBg: "rgba(247,127,0,0.07)", iconBorder: "rgba(247,127,0,0.13)" },
+  { label: "Monitored Entities", value: "12", change: "+3%", positive: true, icon: "entities", accentColor: "#04C0B9", iconBg: "rgba(4,192,185,0.07)", iconBorder: "rgba(4,192,185,0.13)" },
 ];
 
 const lineData = [
@@ -36,10 +36,10 @@ const recentFindings = [
   { id: 5, severity: "High", name: "Weak Password Policy", asset: "AD-SRV-02", time: "12 hours ago" },
 ];
 
-function KPIIcon({ type }: { type: string }) {
+function KPIIcon({ type, size = 20 }: { type: string; size?: number }) {
   const icons: Record<string, React.ReactNode> = {
     assets: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
         <rect x="1" y="1" width="8" height="8" rx="2" fill="#1B7EFF" />
         <rect x="11" y="1" width="8" height="8" rx="2" fill="#1B7EFF" opacity="0.4" />
         <rect x="1" y="11" width="8" height="8" rx="2" fill="#1B7EFF" opacity="0.4" />
@@ -47,21 +47,21 @@ function KPIIcon({ type }: { type: string }) {
       </svg>
     ),
     critical: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
         <path d="M10 2L18 17H2L10 2Z" fill="#D62828" />
         <path d="M10 8V12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
         <circle cx="10" cy="14.5" r="0.75" fill="white" />
       </svg>
     ),
     risks: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
         <circle cx="10" cy="10" r="8" stroke="#F77F00" strokeWidth="2" />
         <path d="M10 6V11" stroke="#F77F00" strokeWidth="1.5" strokeLinecap="round" />
         <circle cx="10" cy="13.5" r="0.75" fill="#F77F00" />
       </svg>
     ),
     entities: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
         <rect x="3" y="3" width="14" height="14" rx="3" stroke="#04C0B9" strokeWidth="2" />
         <circle cx="10" cy="10" r="3" fill="#04C0B9" />
       </svg>
@@ -211,26 +211,65 @@ export function OverviewPage() {
       </h3>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-[16px]">
-        {kpis.map((kpi) => (
+      <div
+        className="flex rounded-[12px] overflow-hidden"
+        style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: colors.shadowCard }}
+      >
+        {kpis.map((kpi, index) => (
           <div
             key={kpi.label}
-            className="rounded-[12px] p-[16px] flex flex-col gap-[12px] cursor-pointer transition-all duration-150 ease hover:shadow-lg"
-            style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: colors.shadowCard }}
+            className="relative flex-1 overflow-hidden cursor-pointer transition-all duration-150 ease hover:bg-black/[0.015]"
+            style={{ borderRight: index < kpis.length - 1 ? `1px solid ${colors.border}` : "none" }}
             onClick={() => navigate(kpiLinks[kpi.label])}
           >
-            <div className="flex items-center justify-between">
-              <span style={{ fontFamily: font, fontSize: "14px", fontWeight: 400, color: colors.textMuted, letterSpacing: "-0.5px" }}>{kpi.label}</span>
-              <KPIIcon type={kpi.icon} />
+            {/* Colored top accent bar */}
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ backgroundColor: kpi.accentColor }} />
+
+            {/* Ghost / watermark icon */}
+            <div className="absolute bottom-[-4px] right-[-4px] opacity-[0.07] pointer-events-none">
+              <KPIIcon type={kpi.icon} size={70} />
             </div>
-            <div className="flex items-end gap-[8px]">
-              <span style={{ fontFamily: font, fontSize: "28px", fontWeight: 700, color: colors.text, letterSpacing: "-0.5px", lineHeight: "1" }}>{kpi.value}</span>
-              <span
-                className="mb-[2px]"
-                style={{ fontFamily: font, fontSize: "12px", fontWeight: 500, color: kpi.positive ? "#04C0B9" : "#D62828", letterSpacing: "-0.5px" }}
-              >
-                {kpi.change}
+
+            {/* Card content */}
+            <div className="flex flex-col gap-[20px] pt-[24px] pl-[20px] pb-[24px] pr-[16px]">
+              {/* Icon + Label row */}
+              <div className="flex items-center gap-[8px]">
+                <div
+                  className="flex items-center justify-center rounded-[8px] shrink-0"
+                  style={{ width: 28, height: 28, backgroundColor: kpi.iconBg, border: `1px solid ${kpi.iconBorder}` }}
+                >
+                  <KPIIcon type={kpi.icon} />
+                </div>
+                <span style={{ fontFamily: font, fontSize: "13px", fontWeight: 500, color: colors.textMuted, letterSpacing: "-0.5px" }}>
+                  {kpi.label}
+                </span>
+              </div>
+
+              {/* Value */}
+              <span style={{ fontFamily: font, fontSize: "40px", fontWeight: 700, color: colors.text, letterSpacing: "-1.5px", lineHeight: "1" }}>
+                {kpi.value}
               </span>
+
+              {/* Change badge + "vs last month" */}
+              <div className="flex items-center gap-[8px]">
+                <span
+                  className="inline-flex items-center px-[7px] py-[3px] rounded-[4px] whitespace-nowrap"
+                  style={{
+                    backgroundColor: kpi.positive ? "rgba(4,192,185,0.1)" : "rgba(214,40,40,0.1)",
+                    fontFamily: font,
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    color: kpi.positive ? "#04C0B9" : "#D62828",
+                    letterSpacing: "-0.5px",
+                    lineHeight: "12px",
+                  }}
+                >
+                  {kpi.positive ? "▲" : "▼"} {kpi.change}
+                </span>
+                <span style={{ fontFamily: font, fontSize: "12px", fontWeight: 400, color: colors.textMuted, letterSpacing: "-0.5px" }}>
+                  vs last month
+                </span>
+              </div>
             </div>
           </div>
         ))}
