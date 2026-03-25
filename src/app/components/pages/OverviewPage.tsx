@@ -6,10 +6,10 @@ import { useThemeColors } from "../../hooks/useThemeColors";
 const font = "'DM Sans', sans-serif";
 
 const kpis = [
-  { label: "Total Assets", value: "221", change: "+12%", positive: true, icon: "assets" },
-  { label: "Critical Findings", value: "18", change: "-5%", positive: true, icon: "critical" },
-  { label: "Open Risks", value: "47", change: "+8%", positive: false, icon: "risks" },
-  { label: "Monitored Entities", value: "12", change: "+3%", positive: true, icon: "entities" },
+  { label: "Total Assets", value: "221", change: "+12%", positive: true, icon: "assets", accentColor: "#1B7EFF" },
+  { label: "Critical Findings", value: "18", change: "-5%", positive: true, icon: "critical", accentColor: "#D62828" },
+  { label: "Open Risks", value: "47", change: "+8%", positive: false, icon: "risks", accentColor: "#F77F00" },
+  { label: "Monitored Entities", value: "12", change: "+3%", positive: true, icon: "entities", accentColor: "#04C0B9" },
 ];
 
 const lineData = [
@@ -36,38 +36,68 @@ const recentFindings = [
   { id: 5, severity: "High", name: "Weak Password Policy", asset: "AD-SRV-02", time: "12 hours ago" },
 ];
 
-function KPIIcon({ type }: { type: string }) {
+function KPIIcon({ type, color }: { type: string; color: string }) {
   const icons: Record<string, React.ReactNode> = {
     assets: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <rect x="1" y="1" width="8" height="8" rx="2" fill="#1B7EFF" />
-        <rect x="11" y="1" width="8" height="8" rx="2" fill="#1B7EFF" opacity="0.4" />
-        <rect x="1" y="11" width="8" height="8" rx="2" fill="#1B7EFF" opacity="0.4" />
-        <rect x="11" y="11" width="8" height="8" rx="2" fill="#1B7EFF" opacity="0.2" />
+        <path d="M7 1H3C1.89543 1 1 1.89543 1 3V7C1 8.10457 1.89543 9 3 9H7C8.10457 9 9 8.10457 9 7V3C9 1.89543 8.10457 1 7 1Z" fill={color} />
+        <path opacity="0.4" d="M17 1H13C11.8954 1 11 1.89543 11 3V7C11 8.10457 11.8954 9 13 9H17C18.1046 9 19 8.10457 19 7V3C19 1.89543 18.1046 1 17 1Z" fill={color} />
+        <path opacity="0.4" d="M7 11H3C1.89543 11 1 11.8954 1 13V17C1 18.1046 1.89543 19 3 19H7C8.10457 19 9 18.1046 9 17V13C9 11.8954 8.10457 11 7 11Z" fill={color} />
+        <path opacity="0.2" d="M17 11H13C11.8954 11 11 11.8954 11 13V17C11 18.1046 11.8954 19 13 19H17C18.1046 19 19 18.1046 19 17V13C19 11.8954 18.1046 11 17 11Z" fill={color} />
       </svg>
     ),
     critical: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 2L18 17H2L10 2Z" fill="#D62828" />
+        <path d="M10 2L18 17H2L10 2Z" fill={color} />
         <path d="M10 8V12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx="10" cy="14.5" r="0.75" fill="white" />
+        <path d="M10 15.25C10.4142 15.25 10.75 14.9142 10.75 14.5C10.75 14.0858 10.4142 13.75 10 13.75C9.58579 13.75 9.25 14.0858 9.25 14.5C9.25 14.9142 9.58579 15.25 10 15.25Z" fill="white" />
       </svg>
     ),
     risks: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="8" stroke="#F77F00" strokeWidth="2" />
-        <path d="M10 6V11" stroke="#F77F00" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx="10" cy="13.5" r="0.75" fill="#F77F00" />
+        <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke={color} strokeWidth="2" />
+        <path d="M10 6V11" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M10 14.25C10.4142 14.25 10.75 13.9142 10.75 13.5C10.75 13.0858 10.4142 12.75 10 12.75C9.58579 12.75 9.25 13.0858 9.25 13.5C9.25 13.9142 9.58579 14.25 10 14.25Z" fill={color} />
       </svg>
     ),
     entities: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <rect x="3" y="3" width="14" height="14" rx="3" stroke="#04C0B9" strokeWidth="2" />
-        <circle cx="10" cy="10" r="3" fill="#04C0B9" />
+        <path d="M14 3H6C4.34315 3 3 4.34315 3 6V14C3 15.6569 4.34315 17 6 17H14C15.6569 17 17 15.6569 17 14V6C17 4.34315 15.6569 3 14 3Z" stroke={color} strokeWidth="2" />
+        <path d="M10 13C11.6569 13 13 11.6569 13 10C13 8.34315 11.6569 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6569 8.34315 13 10 13Z" fill={color} />
       </svg>
     ),
   };
   return <>{icons[type]}</>;
+}
+
+function KPIWatermark({ type, color }: { type: string; color: string }) {
+  const watermarks: Record<string, React.ReactNode> = {
+    assets: (
+      <svg width="70" height="70" viewBox="0 0 20 20" fill="none">
+        <path d="M7 1H3C1.89543 1 1 1.89543 1 3V7C1 8.10457 1.89543 9 3 9H7C8.10457 9 9 8.10457 9 7V3C9 1.89543 8.10457 1 7 1Z" fill={color} />
+        <path opacity="0.4" d="M17 1H13C11.8954 1 11 1.89543 11 3V7C11 8.10457 11.8954 9 13 9H17C18.1046 9 19 8.10457 19 7V3C19 1.89543 18.1046 1 17 1Z" fill={color} />
+        <path opacity="0.4" d="M7 11H3C1.89543 11 1 11.8954 1 13V17C1 18.1046 1.89543 19 3 19H7C8.10457 19 9 18.1046 9 17V13C9 11.8954 8.10457 11 7 11Z" fill={color} />
+        <path opacity="0.2" d="M17 11H13C11.8954 11 11 11.8954 11 13V17C11 18.1046 11.8954 19 13 19H17C18.1046 19 19 18.1046 19 17V13C19 11.8954 18.1046 11 17 11Z" fill={color} />
+      </svg>
+    ),
+    critical: (
+      <svg width="70" height="70" viewBox="0 0 56 52.5" fill="none">
+        <path d="M28 0L56 52.5H0L28 0Z" fill={color} />
+      </svg>
+    ),
+    risks: (
+      <svg width="70" height="70" viewBox="0 0 63 63" fill="none">
+        <path d="M31.5 59.5C46.964 59.5 59.5 46.964 59.5 31.5C59.5 16.036 46.964 3.5 31.5 3.5C16.036 3.5 3.5 16.036 3.5 31.5C3.5 46.964 16.036 59.5 31.5 59.5Z" stroke={color} strokeWidth="7" />
+      </svg>
+    ),
+    entities: (
+      <svg width="70" height="70" viewBox="0 0 56 56" fill="none">
+        <path d="M42 3.5H14C8.20101 3.5 3.5 8.20101 3.5 14V42C3.5 47.799 8.20101 52.5 14 52.5H42C47.799 52.5 52.5 47.799 52.5 42V14C52.5 8.20101 47.799 3.5 42 3.5Z" stroke={color} strokeWidth="7" />
+        <path d="M28 38.5C33.799 38.5 38.5 33.799 38.5 28C38.5 22.201 33.799 17.5 28 17.5C22.201 17.5 17.5 22.201 17.5 28C17.5 33.799 22.201 38.5 28 38.5Z" fill={color} />
+      </svg>
+    ),
+  };
+  return <>{watermarks[type]}</>;
 }
 
 function SeverityBadge({ severity }: { severity: string }) {
@@ -211,29 +241,73 @@ export function OverviewPage() {
       </h3>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-[16px]">
-        {kpis.map((kpi) => (
-          <div
-            key={kpi.label}
-            className="rounded-[12px] p-[16px] flex flex-col gap-[12px] cursor-pointer transition-all duration-150 ease hover:shadow-lg"
-            style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: colors.shadowCard }}
-            onClick={() => navigate(kpiLinks[kpi.label])}
-          >
-            <div className="flex items-center justify-between">
-              <span style={{ fontFamily: font, fontSize: "14px", fontWeight: 400, color: colors.textMuted, letterSpacing: "-0.5px" }}>{kpi.label}</span>
-              <KPIIcon type={kpi.icon} />
+      <div
+        className="grid grid-cols-4 rounded-[12px] overflow-hidden"
+        style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: `0px 6px 16px 0px rgba(19,37,72,0.14)` }}
+      >
+        {kpis.map((kpi, idx) => {
+          const changeColor = kpi.positive ? "#04C0B9" : "#D62828";
+          const changeBg = kpi.positive ? "rgba(4,192,185,0.1)" : "rgba(214,40,40,0.1)";
+          const arrow = kpi.positive ? "▲" : "▼";
+          return (
+            <div
+              key={kpi.label}
+              className="relative overflow-hidden cursor-pointer transition-all duration-150 ease"
+              style={{
+                height: 170,
+                borderRight: idx < kpis.length - 1 ? `1px solid ${colors.border}` : "none",
+              }}
+              onClick={() => navigate(kpiLinks[kpi.label])}
+            >
+              {/* Colored top bar */}
+              <div className="absolute top-0 left-0 right-0" style={{ height: 3, backgroundColor: kpi.accentColor }} />
+
+              {/* Watermark icon */}
+              <div className="absolute" style={{ right: -16, bottom: -12, opacity: 0.07 }}>
+                <KPIWatermark type={kpi.icon} color={kpi.accentColor} />
+              </div>
+
+              {/* Content */}
+              <div className="relative flex flex-col gap-[20px] h-full pl-[20px] pt-[24px]">
+                {/* Icon badge + label */}
+                <div className="flex items-center gap-[8px]">
+                  <div
+                    className="flex items-center justify-center rounded-[8px] shrink-0"
+                    style={{
+                      width: 28,
+                      height: 28,
+                      backgroundColor: `${kpi.accentColor}12`,
+                      border: `1px solid ${kpi.accentColor}21`,
+                    }}
+                  >
+                    <KPIIcon type={kpi.icon} color={kpi.accentColor} />
+                  </div>
+                  <span style={{ fontFamily: font, fontSize: 13, fontWeight: 500, color: "#8F97AC", letterSpacing: "-0.5px", lineHeight: "13px" }}>
+                    {kpi.label}
+                  </span>
+                </div>
+
+                {/* Value */}
+                <p className="m-0" style={{ fontFamily: font, fontSize: 40, fontWeight: 700, color: "#001837", letterSpacing: "-1.5px", lineHeight: "40px" }}>
+                  {kpi.value}
+                </p>
+
+                {/* Change pill + vs last month */}
+                <div className="flex items-center gap-[8px]">
+                  <span
+                    className="inline-flex items-center rounded-[4px] px-[7px] py-[3px]"
+                    style={{ backgroundColor: changeBg, fontFamily: font, fontSize: 12, fontWeight: 600, color: changeColor, letterSpacing: "-0.5px", lineHeight: "12px" }}
+                  >
+                    {arrow} {kpi.change}
+                  </span>
+                  <span style={{ fontFamily: font, fontSize: 12, fontWeight: 400, color: "#8F97AC", letterSpacing: "-0.5px", lineHeight: "18px" }}>
+                    vs last month
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-end gap-[8px]">
-              <span style={{ fontFamily: font, fontSize: "28px", fontWeight: 700, color: colors.text, letterSpacing: "-0.5px", lineHeight: "1" }}>{kpi.value}</span>
-              <span
-                className="mb-[2px]"
-                style={{ fontFamily: font, fontSize: "12px", fontWeight: 500, color: kpi.positive ? "#04C0B9" : "#D62828", letterSpacing: "-0.5px" }}
-              >
-                {kpi.change}
-              </span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Charts Row */}

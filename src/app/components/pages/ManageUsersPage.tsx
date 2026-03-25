@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router";
 import { PageHeader } from "../shared/PageHeader";
 import { DataTable, Badge } from "../shared/DataTable";
 import { FilterDropdown } from "../shared/FilterDropdown";
@@ -33,6 +34,7 @@ const users = [
 
 export function ManageUsersPage() {
   const colors = useThemeColors();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -118,7 +120,7 @@ export function ManageUsersPage() {
         primaryAction={{ label: "Invite User" }}
         showExport
       />
-      <DataTable columns={columns} data={filtered} showCheckbox sectionTitle="Users List" />
+      <DataTable columns={columns} data={filtered} showCheckbox sectionTitle="Users List" onRowClick={(row) => navigate(`/manage-users/${row.id}`)} />
     </div>
   );
 }

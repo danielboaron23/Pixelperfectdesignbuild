@@ -12,6 +12,7 @@ import { AssetsPage } from "./components/pages/AssetsPage";
 import { ContextEventsPage } from "./components/pages/ContextEventsPage";
 import { ManageUsersPage } from "./components/pages/ManageUsersPage";
 import { NotificationsPage } from "./components/pages/NotificationsPage";
+import { UserProfilePage } from "./components/pages/UserProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       { path: "assets", Component: AssetsPage },
       { path: "context-events", Component: ContextEventsPage },
       { path: "manage-users", Component: ManageUsersPage },
+      { path: "manage-users/:userId", Component: UserProfilePage },
       { path: "notifications", Component: NotificationsPage },
     ],
   },
