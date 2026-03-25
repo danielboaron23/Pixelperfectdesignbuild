@@ -17,6 +17,7 @@ interface DataTableProps {
   showCheckbox?: boolean;
   showActions?: boolean;
   onActionClick?: (row: any) => void;
+  onRowClick?: (row: any) => void;
   sectionTitle?: string;
 }
 
@@ -26,6 +27,7 @@ export function DataTable({
   pageSize = 15,
   showCheckbox = false,
   showActions = true,
+  onRowClick,
   sectionTitle,
 }: DataTableProps) {
   const colors = useThemeColors();
@@ -67,8 +69,9 @@ export function DataTable({
         {paginatedData.map((row, idx) => (
           <div
             key={row.id || idx}
-            className="flex items-center transition-colors duration-150 ease"
+            className={`flex items-center transition-colors duration-150 ease${onRowClick ? " cursor-pointer" : ""}`}
             style={{ height: "42px", borderTop: `1px solid ${colors.border}`, backgroundColor: colors.bg }}
+            onClick={() => onRowClick?.(row)}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = colors.bgSecondary)}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = colors.bg)}
           >

@@ -30,21 +30,32 @@ export function Breadcrumbs() {
   const route = routeLabels[path];
   const colors = useThemeColors();
 
-  if (!route) return null;
+  // Dynamic route: /manage-users/:userId
+  const isUserProfile = !route && path.startsWith("/manage-users/");
+
+  if (!route && !isUserProfile) return null;
+
+  const crumbStyle = {
+    fontFamily: font,
+    fontSize: "12px",
+    fontWeight: 400,
+    color: colors.textMuted,
+    letterSpacing: "-0.5px",
+    lineHeight: "14px",
+  } as const;
+
+  const activeCrumbStyle = {
+    ...crumbStyle,
+    fontWeight: 500,
+    color: colors.text,
+  } as const;
 
   return (
     <nav className="flex items-center gap-[6px] mb-[12px]">
       <button
         onClick={() => navigate("/overview")}
         className="bg-transparent border-none cursor-pointer p-0"
-        style={{
-          fontFamily: font,
-          fontSize: "12px",
-          fontWeight: 400,
-          color: colors.textMuted,
-          letterSpacing: "-0.5px",
-          lineHeight: "14px",
-        }}
+        style={crumbStyle}
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="inline-block mr-[4px] align-[-2px]">
           <path
@@ -61,33 +72,27 @@ export function Breadcrumbs() {
 
       <ChevronIcon />
 
-      <span
-        style={{
-          fontFamily: font,
-          fontSize: "12px",
-          fontWeight: 400,
-          color: colors.textMuted,
-          letterSpacing: "-0.5px",
-          lineHeight: "14px",
-        }}
-      >
-        {route.section}
-      </span>
-
-      <ChevronIcon />
-
-      <span
-        style={{
-          fontFamily: font,
-          fontSize: "12px",
-          fontWeight: 500,
-          color: colors.text,
-          letterSpacing: "-0.5px",
-          lineHeight: "14px",
-        }}
-      >
-        {route.label}
-      </span>
+      {isUserProfile ? (
+        <>
+          <span style={crumbStyle}>User Management</span>
+          <ChevronIcon />
+          <button
+            onClick={() => navigate("/manage-users")}
+            className="bg-transparent border-none cursor-pointer p-0"
+            style={crumbStyle}
+          >
+            Manage Users
+          </button>
+          <ChevronIcon />
+          <span style={activeCrumbStyle}>User Profile</span>
+        </>
+      ) : (
+        <>
+          <span style={crumbStyle}>{route!.section}</span>
+          <ChevronIcon />
+          <span style={activeCrumbStyle}>{route!.label}</span>
+        </>
+      )}
     </nav>
   );
 }
