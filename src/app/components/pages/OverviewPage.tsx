@@ -6,10 +6,10 @@ import { useThemeColors } from "../../hooks/useThemeColors";
 const font = "'DM Sans', sans-serif";
 
 const kpis = [
-  { label: "Total Assets", value: "221", change: "+12%", positive: true, icon: "assets" },
-  { label: "Critical Findings", value: "18", change: "-5%", positive: true, icon: "critical" },
-  { label: "Open Risks", value: "47", change: "+8%", positive: false, icon: "risks" },
-  { label: "Monitored Entities", value: "12", change: "+3%", positive: true, icon: "entities" },
+  { label: "Total Assets", value: "221", change: "+12%", positive: true, icon: "assets", accentColor: "#1B7EFF", iconBg: "rgba(27,126,255,0.07)", iconBorder: "rgba(27,126,255,0.13)" },
+  { label: "Critical Findings", value: "18", change: "-5%", positive: true, icon: "critical", accentColor: "#D62828", iconBg: "rgba(214,40,40,0.07)", iconBorder: "rgba(214,40,40,0.13)" },
+  { label: "Open Risks", value: "47", change: "+8%", positive: false, icon: "risks", accentColor: "#F77F00", iconBg: "rgba(247,127,0,0.07)", iconBorder: "rgba(247,127,0,0.13)" },
+  { label: "Monitored Entities", value: "12", change: "+3%", positive: true, icon: "entities", accentColor: "#04C0B9", iconBg: "rgba(4,192,185,0.07)", iconBorder: "rgba(4,192,185,0.13)" },
 ];
 
 const lineData = [
@@ -211,26 +211,42 @@ export function OverviewPage() {
       </h3>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-[16px]">
-        {kpis.map((kpi) => (
+      <div
+        className="rounded-[12px] flex overflow-hidden cursor-pointer"
+        style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: colors.shadowCard }}
+      >
+        {kpis.map((kpi, i) => (
           <div
             key={kpi.label}
-            className="rounded-[12px] p-[16px] flex flex-col gap-[12px] cursor-pointer transition-all duration-150 ease hover:shadow-lg"
-            style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: colors.shadowCard }}
+            className="flex-1 flex flex-col gap-[20px] pt-[24px] pl-[20px] pb-[20px] pr-[20px] relative overflow-hidden transition-all duration-150 ease hover:bg-black/[0.02]"
+            style={{ borderRight: i < kpis.length - 1 ? `1px solid ${colors.border}` : undefined }}
             onClick={() => navigate(kpiLinks[kpi.label])}
           >
-            <div className="flex items-center justify-between">
-              <span style={{ fontFamily: font, fontSize: "14px", fontWeight: 400, color: colors.textMuted, letterSpacing: "-0.5px" }}>{kpi.label}</span>
-              <KPIIcon type={kpi.icon} />
-            </div>
-            <div className="flex items-end gap-[8px]">
-              <span style={{ fontFamily: font, fontSize: "28px", fontWeight: 700, color: colors.text, letterSpacing: "-0.5px", lineHeight: "1" }}>{kpi.value}</span>
-              <span
-                className="mb-[2px]"
-                style={{ fontFamily: font, fontSize: "12px", fontWeight: 500, color: kpi.positive ? "#04C0B9" : "#D62828", letterSpacing: "-0.5px" }}
+            {/* Accent bar */}
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ backgroundColor: kpi.accentColor }} />
+            {/* Label row */}
+            <div className="flex items-center gap-[8px]">
+              <div
+                className="rounded-[8px] shrink-0 size-[28px] flex items-center justify-center"
+                style={{ backgroundColor: kpi.iconBg, border: `1px solid ${kpi.iconBorder}` }}
               >
-                {kpi.change}
-              </span>
+                <KPIIcon type={kpi.icon} />
+              </div>
+              <span style={{ fontFamily: font, fontSize: "13px", fontWeight: 500, color: colors.textMuted, letterSpacing: "-0.5px" }}>{kpi.label}</span>
+            </div>
+            {/* Value */}
+            <span style={{ fontFamily: font, fontSize: "40px", fontWeight: 700, color: colors.text, letterSpacing: "-1.5px", lineHeight: "1" }}>{kpi.value}</span>
+            {/* Change badge */}
+            <div className="flex items-center gap-[8px]">
+              <div
+                className="rounded-[4px] px-[7px] py-[3px]"
+                style={{ backgroundColor: kpi.positive ? "rgba(4,192,185,0.1)" : "rgba(214,40,40,0.1)" }}
+              >
+                <span style={{ fontFamily: font, fontSize: "12px", fontWeight: 600, color: kpi.positive ? "#04C0B9" : "#D62828", letterSpacing: "-0.5px" }}>
+                  {kpi.positive ? "▲" : "▼"} {kpi.change}
+                </span>
+              </div>
+              <span style={{ fontFamily: font, fontSize: "12px", fontWeight: 400, color: colors.textMuted, letterSpacing: "-0.5px" }}>vs last month</span>
             </div>
           </div>
         ))}
