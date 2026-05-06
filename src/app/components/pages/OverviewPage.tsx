@@ -211,30 +211,114 @@ export function OverviewPage() {
       </h3>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-[16px]">
-        {kpis.map((kpi) => (
+      {(() => {
+        const accentColors: Record<string, string> = {
+          "Total Assets": "#1B7EFF",
+          "Critical Findings": "#D62828",
+          "Open Risks": "#F77F00",
+          "Monitored Entities": "#04C0B9",
+        };
+        const bgAccents: Record<string, string> = {
+          "Total Assets": "rgba(27,126,255,0.07)",
+          "Critical Findings": "rgba(214,40,40,0.07)",
+          "Open Risks": "rgba(247,127,0,0.07)",
+          "Monitored Entities": "rgba(4,192,185,0.07)",
+        };
+        return (
           <div
-            key={kpi.label}
-            className="rounded-[12px] p-[16px] flex flex-col gap-[12px] cursor-pointer transition-all duration-150 ease hover:shadow-lg"
+            className="rounded-[12px] overflow-hidden flex"
             style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, boxShadow: colors.shadowCard }}
-            onClick={() => navigate(kpiLinks[kpi.label])}
           >
-            <div className="flex items-center justify-between">
-              <span style={{ fontFamily: font, fontSize: "14px", fontWeight: 400, color: colors.textMuted, letterSpacing: "-0.5px" }}>{kpi.label}</span>
-              <KPIIcon type={kpi.icon} />
-            </div>
-            <div className="flex items-end gap-[8px]">
-              <span style={{ fontFamily: font, fontSize: "28px", fontWeight: 700, color: colors.text, letterSpacing: "-0.5px", lineHeight: "1" }}>{kpi.value}</span>
-              <span
-                className="mb-[2px]"
-                style={{ fontFamily: font, fontSize: "12px", fontWeight: 500, color: kpi.positive ? "#04C0B9" : "#D62828", letterSpacing: "-0.5px" }}
-              >
-                {kpi.change}
-              </span>
-            </div>
+            {kpis.map((kpi, i) => {
+              const accent = accentColors[kpi.label] ?? "#1B7EFF";
+              const bgAccent = bgAccents[kpi.label] ?? "transparent";
+              const isLast = i === kpis.length - 1;
+              return (
+                <div
+                  key={kpi.label}
+                  className="flex-1 relative flex flex-col justify-between cursor-pointer transition-all duration-200 ease overflow-hidden"
+                  style={{
+                    padding: "0",
+                    borderRight: isLast ? "none" : `1px solid ${colors.border}`,
+                  }}
+                  onClick={() => navigate(kpiLinks[kpi.label])}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.backgroundColor = bgAccent; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.backgroundColor = "transparent"; }}
+                >
+                  {/* Colored top accent bar */}
+                  <div
+                    className="absolute top-0 left-0 right-0"
+                    style={{ height: "3px", backgroundColor: accent }}
+                  />
+
+                  {/* Large watermark icon */}
+                  <div
+                    className="absolute bottom-[-8px] right-[-4px] pointer-events-none"
+                    style={{ opacity: 0.07 }}
+                  >
+                    <div style={{ transform: "scale(3.5)", transformOrigin: "bottom right" }}>
+                      <KPIIcon type={kpi.icon} />
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative flex flex-col gap-[20px] p-[20px] pt-[24px]">
+                    {/* Label + icon row */}
+                    <div className="flex items-center gap-[8px]">
+                      <div
+                        className="flex items-center justify-center rounded-[8px] shrink-0"
+                        style={{ width: "28px", height: "28px", backgroundColor: bgAccents[kpi.label] ?? "transparent", border: `1px solid ${accent}22` }}
+                      >
+                        <KPIIcon type={kpi.icon} />
+                      </div>
+                      <span style={{ fontFamily: font, fontSize: "13px", fontWeight: 500, color: colors.textMuted, letterSpacing: "-0.5px", lineHeight: "1" }}>
+                        {kpi.label}
+                      </span>
+                    </div>
+
+                    {/* Big number */}
+                    <div className="flex flex-col gap-[4px]">
+                      <span
+                        style={{
+                          fontFamily: font,
+                          fontSize: "40px",
+                          fontWeight: 700,
+                          color: colors.text,
+                          letterSpacing: "-1.5px",
+                          lineHeight: "1",
+                        }}
+                      >
+                        {kpi.value}
+                      </span>
+                    </div>
+
+                    {/* Bottom: change badge + vs label */}
+                    <div className="flex items-center gap-[8px]">
+                      <span
+                        className="inline-flex items-center gap-[3px] rounded-[4px] px-[7px] py-[3px]"
+                        style={{
+                          fontFamily: font,
+                          fontSize: "12px",
+                          fontWeight: 600,
+                          letterSpacing: "-0.5px",
+                          lineHeight: "1",
+                          color: kpi.positive ? "#04C0B9" : "#D62828",
+                          backgroundColor: kpi.positive ? "rgba(4,192,185,0.10)" : "rgba(214,40,40,0.10)",
+                        }}
+                      >
+                        {kpi.positive ? "▲" : "▼"} {kpi.change}
+                      </span>
+                      <span style={{ fontFamily: font, fontSize: "12px", fontWeight: 400, color: colors.textMuted, letterSpacing: "-0.5px" }}>
+                        vs last month
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        ))}
-      </div>
+        );
+      })()}
 
       {/* Charts Row */}
       <div className="grid grid-cols-[2fr_1fr] gap-[16px]">
